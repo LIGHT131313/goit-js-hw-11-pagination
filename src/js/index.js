@@ -12,8 +12,10 @@ const refs = {
 
 refs.form.addEventListener('submit', onSearch);
 refs.loadMore.addEventListener('click', onLoadMore);
+
 let page = 1;
 const perPage = 40;
+let searchQuery = '';
 let simpleGallery;
 
 /**
@@ -56,9 +58,8 @@ function onSearch(evt) {
 
 /**
  * Рrocesses the element select and promise
- * @param {Object} evt
  */
-function onLoadMore(evt) {
+function onLoadMore() {
   page += 1;
 
   fetchQuary(searchQuery, page, perPage)
