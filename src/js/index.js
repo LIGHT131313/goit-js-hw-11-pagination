@@ -2,7 +2,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchQuary } from './pixabay-api';
-import { createMarkUp } from './mymodules';
+import { createMarkUp, scrollMore } from './mymodules';
 
 const refs = {
   form: document.querySelector('.search-form'),
@@ -16,7 +16,11 @@ refs.loadMore.addEventListener('click', onLoadMore);
 let page = 1;
 const perPage = 40;
 let searchQuery = '';
-let simpleGallery;
+let simpleGallery = '';
+const simpleOptions = {
+  captionsData: 'alt',
+  captionDelay: 250,
+};
 
 /**
  * Рrocesses the element select and promise
@@ -27,6 +31,7 @@ function onSearch(evt) {
   refs.loadMore.hidden = true;
   searchQuery = refs.form.searchQuery.value;
   page = 1;
+  refs.gallery.innerHTML = '';
 
   fetchQuary(searchQuery, page, perPage)
     .then(({ data }) => {
@@ -37,10 +42,7 @@ function onSearch(evt) {
       } else {
         refs.gallery.innerHTML = createMarkUp(data.hits);
 
-        simpleGallery = new SimpleLightbox('.gallery a', {
-          captionsData: 'alt',
-          captionDelay: 250,
-        });
+        simpleGallery = new SimpleLightbox('.gallery a', simpleOptions);
 
         Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
@@ -76,13 +78,7 @@ function onLoadMore() {
         );
       }
 
-      const { height: cardHeight } =
-        refs.gallery.firstElementChild.getBoundingClientRect();
-
-      window.scrollBy({
-        top: cardHeight * 2,
-        behavior: 'smooth',
-      });
+      scrollMore(refs.gallery);
     })
     .catch(err => {
       console.log(err);

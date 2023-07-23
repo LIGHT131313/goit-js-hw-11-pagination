@@ -3,7 +3,7 @@
  * @param {Array} arr
  * @returns
  */
-export function createMarkUp(arr) {
+function createMarkUp(arr) {
   return arr
     .map(
       ({
@@ -30,3 +30,18 @@ export function createMarkUp(arr) {
     )
     .join('');
 }
+
+/**
+ * Scroll down through the cards
+ * @param {Object} item
+ */
+function scrollMore(item) {
+  const { height: cardHeight } = item.firstElementChild.getBoundingClientRect();
+
+  window.scrollBy({
+    top: cardHeight * 4 - 76,
+    behavior: 'smooth',
+  });
+}
+
+export { createMarkUp, scrollMore };
