@@ -75,6 +75,14 @@ function onLoadMore() {
           `We're sorry, but you've reached the end of search results.`
         );
       }
+
+      const { height: cardHeight } =
+        refs.gallery.firstElementChild.getBoundingClientRect();
+
+      window.scrollBy({
+        top: cardHeight * 2,
+        behavior: 'smooth',
+      });
     })
     .catch(err => {
       console.log(err);
