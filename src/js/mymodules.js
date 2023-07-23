@@ -1,28 +1,32 @@
 /**
- * Creates the markup of the select elem
+ * Creates the markup of the photo-cards
  * @param {Array} arr
- * @returns Murkup
+ * @returns
  */
-function selectCreateMarkUp(arr) {
+export function createMarkUp(arr) {
   return arr
-    .map(({ id, name }) => `<option value="${id}">${name}</option>`)
+    .map(
+      ({
+        webformatURL,
+        webformatWidth,
+        webformatHeight,
+        largeImageURL,
+        tags,
+        likes,
+        views,
+        comments,
+        downloads,
+      }) => `<div class="photo-card">
+              <a class="gallery_link" href="${largeImageURL}">
+                <img class="gallery_image" src="${webformatURL}" alt="${tags}" width="${webformatWidth}" height="${webformatHeight}" loading="lazy" />
+              </a>
+                <div class="info">
+                    <p class="info-item"><b>Likes</b><br/>${likes}</p>
+                    <p class="info-item"><b>Views</b><br/>${views}</p>
+                    <p class="info-item"><b>Comments</b><br/>${comments}</p>
+                    <p class="info-item"><b>Downloads</b><br/>${downloads}</p>
+                </div>
+            </div>`
+    )
     .join('');
 }
-
-/**
- * Creates the markup of the cat-info elem
- * @param {Array} arr
- * @returns Murkup
- */
-function createMarkUp(arr) {
-  const { url, width, height } = arr[0];
-  const { name, description, temperament } = arr[0].breeds[0];
-
-  return `
-    <img class="cat-info-img" src="${url}" alt="${name}" width="${width}", height="${height}">
-    <div><h2>${name}</h2>
-    <p>${description}</p>
-    <p><span>Temperament:</span> ${temperament}</p></div>`;
-}
-
-export { selectCreateMarkUp, createMarkUp };

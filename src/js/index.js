@@ -1,55 +1,81 @@
-import { fetchBreeds, fetchCatByBreed } from './cat-api';
-import { selectCreateMarkUp, createMarkUp } from './mymodules';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
+import { fetchQuary } from './pixabay-api';
+import { createMarkUp } from './mymodules';
 
 const refs = {
-  select: document.querySelector('.breed-select'),
-  pLoader: document.querySelector('.loader'),
-  div: document.querySelector('.cat-info'),
+  form: document.querySelector('.search-form'),
+  gallery: document.querySelector('.gallery'),
+  loadMore: document.querySelector('.load-more'),
 };
 
-refs.pLoader.hidden = false;
-
-fetchBreeds()
-  .then(({ data }) => {
-    refs.select.innerHTML = selectCreateMarkUp(data);
-
-    refs.select.hidden = false;
-  })
-  .catch(err => {
-    console.log(err.message);
-
-    Notify.failure(`Oops! Something went wrong! Try reloading the page!`, {
-      position: 'center-center',
-    });
-  })
-  .finally(() => {
-    refs.pLoader.hidden = true;
-  });
-
-refs.select.addEventListener('change', onSelect);
+refs.form.addEventListener('submit', onSearch);
+refs.loadMore.addEventListener('click', onLoadMore);
+let page = 1;
+const perPage = 40;
+let simpleGallery;
 
 /**
  * Рrocesses the element select and promise
  * @param {Object} evt
  */
-function onSelect(evt) {
-  const breedId = evt.currentTarget.value;
-  refs.pLoader.hidden = false;
-  refs.div.innerHTML = '';
+function onSearch(evt) {
+  evt.preventDefault();
+  refs.loadMore.hidden = true;
+  searchQuery = refs.form.searchQuery.value;
+  page = 1;
 
-  fetchCatByBreed(breedId)
+  fetchQuary(searchQuery, page, perPage)
     .then(({ data }) => {
-      refs.div.innerHTML = createMarkUp(data);
+      if (!data.hits.length || !searchQuery.trim()) {
+        Notify.failure(
+          'Sorry, there are no images matching your search query. Please try again.'
+        );
+      } else {
+        refs.gallery.innerHTML = createMarkUp(data.hits);
+
+        simpleGallery = new SimpleLightbox('.gallery a', {
+          captionsData: 'alt',
+          captionDelay: 250,
+        });
+
+        Notify.success(`Hooray! We found ${data.totalHits} images.`);
+
+        if (data.totalHits / perPage >= page) {
+          refs.loadMore.hidden = false;
+        }
+      }
     })
     .catch(err => {
-      console.log(err.message);
+      console.log(err);
+    });
 
-      Notify.failure(`Oops! Something went wrong! Try reloading the page!`, {
-        position: 'center-center',
-      });
+  evt.target.reset();
+}
+
+/**
+ * Рrocesses the element select and promise
+ * @param {Object} evt
+ */
+function onLoadMore(evt) {
+  page += 1;
+
+  fetchQuary(searchQuery, page, perPage)
+    .then(({ data }) => {
+      refs.gallery.insertAdjacentHTML('beforeend', createMarkUp(data.hits));
+
+      simpleGallery.refresh();
+
+      if (data.totalHits / perPage < page) {
+        refs.loadMore.hidden = true;
+
+        Notify.failure(
+          `We're sorry, but you've reached the end of search results.`
+        );
+      }
     })
-    .finally(() => {
-      refs.pLoader.hidden = true;
+    .catch(err => {
+      console.log(err);
     });
 }

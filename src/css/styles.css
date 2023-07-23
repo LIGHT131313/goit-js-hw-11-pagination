@@ -1,0 +1,133 @@
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  --animation-duration: 250ms;
+}
+
+body {
+  background-color: #a3d0c3;
+  font-family: 'Roboto', sans-serif;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.container {
+  max-width: 1158px;
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  margin: 0;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+}
+
+/* Search form */
+.search-form {
+  box-sizing: border-box;
+  position: relative;
+  width: 300px;
+  margin: 0 auto;
+}
+
+.search-form input {
+  width: 100%;
+  height: 42px;
+  padding-left: 10px;
+  border: 2px solid #7ba7ab;
+  border-radius: 5px;
+  outline: none;
+  background: #f9f0da;
+  color: #9e9c9c;
+}
+
+.search-form button {
+  position: absolute;
+  top: 0;
+  right: 0px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  background: #7ba7ab;
+  border-radius: 0 5px 5px 0;
+  cursor: pointer;
+  font-size: 0;
+}
+
+.search-form button:before {
+  content: '\f002';
+  font-family: FontAwesome;
+  font-size: 16px;
+  color: #f9f0da;
+}
+
+.load-more {
+  width: 100px;
+  background: #f9f0da;
+  border-radius: 5px;
+  border: 2px solid #7ba7ab;
+  cursor: pointer;
+  color: #9e9c9c;
+  margin-bottom: 60px;
+  position: relative;
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+
+.gallery {
+  padding-top: 76px;
+  padding-bottom: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: 20px;
+  row-gap: 20px;
+}
+
+.photo-card {
+  background-color: #f9f0da;
+  width: calc((100% - 60px) / 4);
+  border-radius: 5px;
+  transition: transform var(--animation-duration) var(--timing-function);
+  box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.2),
+    0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 2px 1px -1px rgba(0, 0, 0, 0.12);
+}
+
+.photo-card:hover {
+  transform: scale(1.03);
+}
+
+.gallery_link {
+  border-radius: 5px 5px 0 0;
+}
+
+.gallery_image {
+  height: 160px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+}
+
+.gallery_link:hover {
+  cursor: zoom-in;
+}
+
+.info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  font-size: 12px;
+}
