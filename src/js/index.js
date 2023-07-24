@@ -7,11 +7,12 @@ import { createMarkUp, scrollMore } from './mymodules';
 const refs = {
   form: document.querySelector('.search-form'),
   gallery: document.querySelector('.gallery'),
-  loadMore: document.querySelector('.load-more'),
+  // loadMore: document.querySelector('.load-more'),
+  guard: document.querySelector('.js-guard'),
 };
 
 refs.form.addEventListener('submit', onSearch);
-refs.loadMore.addEventListener('click', onLoadMore);
+// refs.loadMore.addEventListener('click', onLoadMore);
 
 let page = 1;
 const perPage = 40;
@@ -28,7 +29,7 @@ const simpleOptions = {
  */
 function onSearch(evt) {
   evt.preventDefault();
-  refs.loadMore.hidden = true;
+  // refs.loadMore.hidden = true;
   searchQuery = refs.form.searchQuery.value;
   page = 1;
   refs.gallery.innerHTML = '';
@@ -47,7 +48,7 @@ function onSearch(evt) {
         Notify.success(`Hooray! We found ${data.totalHits} images.`);
 
         if (data.totalHits / perPage >= page) {
-          refs.loadMore.hidden = false;
+          // refs.loadMore.hidden = false;
         }
       }
     })
@@ -61,22 +62,52 @@ function onSearch(evt) {
 /**
  * Рrocesses the element select and promise
  */
-function onLoadMore() {
-  page += 1;
+// function onLoadMore() {
+//   page += 1;
 
+//   fetchQuary(searchQuery, page, perPage)
+//     .then(({ data }) => {
+//       refs.gallery.insertAdjacentHTML('beforeend', createMarkUp(data.hits));
+
+//       simpleGallery.refresh();
+
+//       if (data.totalHits / perPage < page) {
+//         refs.loadMore.hidden = true;
+
+//         Notify.failure(
+//           `We're sorry, but you've reached the end of search results.`
+//         );
+//       }
+
+//       scrollMore(refs.gallery);
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// }
+
+let options = {
+  root: null,
+  rootMargin: '300px',
+  threshold: 0,
+};
+
+let observer = new IntersectionObserver(onPaginationGallary, options);
+
+function onPaginationGallary() {
   fetchQuary(searchQuery, page, perPage)
     .then(({ data }) => {
       refs.gallery.insertAdjacentHTML('beforeend', createMarkUp(data.hits));
 
       simpleGallery.refresh();
 
-      if (data.totalHits / perPage < page) {
-        refs.loadMore.hidden = true;
+      // if (data.totalHits / perPage < page) {
+      //   refs.loadMore.hidden = true;
 
-        Notify.failure(
-          `We're sorry, but you've reached the end of search results.`
-        );
-      }
+      //   Notify.failure(
+      //     `We're sorry, but you've reached the end of search results.`
+      //   );
+      // }
 
       scrollMore(refs.gallery);
     })

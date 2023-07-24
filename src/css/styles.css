@@ -131,3 +131,7 @@ img {
   gap: 14px;
   font-size: 12px;
 }
+
+.info-item {
+  text-align: center;
+}
