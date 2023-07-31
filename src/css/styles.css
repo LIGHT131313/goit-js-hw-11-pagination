@@ -74,7 +74,7 @@ img {
   color: #f9f0da;
 }
 
-.load-more {
+/* .load-more {
   width: 100px;
   background: #f9f0da;
   border-radius: 5px;
@@ -85,7 +85,7 @@ img {
   position: relative;
   left: 50%;
   transform: translate(-50%, 0);
-}
+} */
 
 .gallery {
   padding-top: 76px;
@@ -134,4 +134,10 @@ img {
 
 .info-item {
   text-align: center;
+}
+
+.error-img {
+  display: block;
+  margin-right: auto;
+  margin-left: auto;
 }
