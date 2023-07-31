@@ -2,7 +2,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 import { fetchQuary } from './pixabay-api';
-import { createMarkUp, scrollMore } from './mymodules';
+import { createMarkUp, scrollUp } from './mymodules';
 
 const refs = {
   form: document.querySelector('.search-form'),
@@ -16,6 +16,8 @@ let page = 1;
 const perPage = 40;
 let searchQuery = '';
 let simpleGallery = '';
+let newSearchQuery = '';
+
 const simpleOptions = {
   captionsData: 'alt',
   captionDelay: 250,
@@ -36,7 +38,11 @@ function onSearch(evt) {
   searchQuery = refs.form.searchQuery.value;
 
   if (!searchQuery.trim()) {
-    Notify.failure('Please enter a non-empty search query');
+    Notify.failure('Please enter a NON-EMPTY search query');
+  } else if (newSearchQuery === refs.form.searchQuery.value) {
+    Notify.failure('Please enter a NEW search query');
+
+    scrollUp();
   } else {
     page = 1;
     refs.gallery.innerHTML = '';
@@ -48,8 +54,6 @@ function onSearch(evt) {
             'Sorry, there are no images matching your search query. Please try again.'
           );
         } else {
-          console.log('onSearch', data.totalHits / perPage);
-          console.log('onSearch', page);
           refs.gallery.innerHTML = createMarkUp(data.hits);
 
           simpleGallery = new SimpleLightbox('.gallery a', simpleOptions);
@@ -63,7 +67,8 @@ function onSearch(evt) {
       })
       .catch(() => {
         location.href = './error.html';
-      });
+      })
+      .finally((newSearchQuery = refs.form.searchQuery.value));
   }
   evt.target.reset();
 }
@@ -84,15 +89,11 @@ function onPaginationGallary(entries, observer) {
           simpleGallery.refresh();
 
           if (data.totalHits / perPage <= page) {
-            console.log('onPaginationGallary', data.totalHits / perPage);
-            console.log('onPaginationGallary', page);
             observer.unobserve(entry.target);
             Notify.failure(
               `We're sorry, but you've reached the end of search results.`
             );
           }
-
-          // scrollMore(refs.gallery);
         })
         .catch(() => {
           location.href = './error.html';

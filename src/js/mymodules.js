@@ -32,16 +32,13 @@ function createMarkUp(arr) {
 }
 
 /**
- * Scroll down through the cards
- * @param {Object} item
+ * Scroll up to start
  */
-function scrollMore(item) {
-  const { height: cardHeight } = item.firstElementChild.getBoundingClientRect();
-
-  window.scrollBy({
-    top: cardHeight * 4 - 76,
+function scrollUp() {
+  window.scrollTo({
+    top: 0,
     behavior: 'smooth',
   });
 }
 
-export { createMarkUp, scrollMore };
+export { createMarkUp, scrollUp };
